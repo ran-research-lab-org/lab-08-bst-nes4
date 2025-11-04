@@ -3,8 +3,10 @@
 
 #include <algorithm>
 #include <iostream>
+#include <queue>
 #include <sstream>
 #include <stdexcept>
+#include <vector>
 using namespace std;
 
 template <typename T> string toStr(const T &value) {
@@ -112,8 +114,43 @@ public:
   void remove(const Comparable &x) { remove(x, root); }
 
   string BFT() const {
-    string st;
-    return st;
+    if (isEmpty()) {
+      return "[]";
+    }
+    
+    string result = "[";
+    queue<BinaryNode*> nodeQueue;
+    nodeQueue.push(root);
+    
+    while (!nodeQueue.empty()) {
+      int levelSize = nodeQueue.size();
+      result += "[";
+      
+      for (int i = 0; i < levelSize; i++) {
+        BinaryNode* current = nodeQueue.front();
+        nodeQueue.pop();
+        
+        result += toStr(current->element);
+        if (i < levelSize - 1) {
+          result += ",";
+        }
+        
+        if (current->left != nullptr) {
+          nodeQueue.push(current->left);
+        }
+        if (current->right != nullptr) {
+          nodeQueue.push(current->right);
+        }
+      }
+      
+      result += "]";
+      if (!nodeQueue.empty()) {
+        result += ",";
+      }
+    }
+    
+    result += "]";
+    return result;
   }
 
 private:
